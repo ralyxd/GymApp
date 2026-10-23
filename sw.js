@@ -1,6 +1,6 @@
 // Service worker de Gym Log: permite instalarla y usarla sin conexión.
 // Estrategia: red primero (para recibir actualizaciones), caché si no hay conexión.
-const CACHE = 'gymlog-v2';
+const CACHE = 'gymlog-v3';
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

@@ -117,6 +117,51 @@ label input,label select{margin-top:5px}
 .stat b{color:var(--text)}
 #toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top));transform:translateX(-50%) translateY(-120px);background:#2a2f39;color:#fff;padding:10px 16px;border-radius:10px;z-index:50;transition:transform .25s;font-size:14px;max-width:90vw}
 #toast.show{transform:translateX(-50%) translateY(0)}
+/* celebraciones */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;height:100%}
+.cel{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,6,8,0);transition:background .4s;overflow:hidden}
+.cel.show{background:rgba(5,6,8,.93);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.cel .rays{position:absolute;left:50%;top:50%;width:240vmax;height:240vmax;margin:-120vmax 0 0 -120vmax;background:repeating-conic-gradient(from 0deg,rgba(255,200,80,.12) 0 9deg,transparent 9deg 18deg);animation:spin 40s linear infinite;opacity:0;transition:opacity 1.2s;pointer-events:none}
+.cel.t3 .rays{background:repeating-conic-gradient(from 0deg,rgba(120,170,255,.09) 0 9deg,transparent 9deg 18deg)}
+.cel.show .rays{opacity:1}
+.cel .glow{position:absolute;left:50%;top:42%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,80,.28),transparent 65%);pointer-events:none;animation:pulse 2.4s ease-in-out infinite}
+.celbox{position:relative;text-align:center;max-width:360px;width:100%;transform:scale(.6);opacity:0;transition:transform .55s cubic-bezier(.2,1.6,.4,1),opacity .3s}
+.cel.show .celbox{transform:none;opacity:1}
+.celemoji{font-size:84px;line-height:1.1;display:inline-block;animation:pop .9s cubic-bezier(.2,1.6,.4,1) both,float 3s ease-in-out .9s infinite}
+.cel.t3 .celemoji{font-size:96px;filter:drop-shadow(0 0 22px rgba(255,200,80,.55))}
+.cel.t4 .celemoji{font-size:118px;filter:drop-shadow(0 0 34px rgba(255,200,80,.8))}
+.celn{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);margin-top:14px}
+.celbig{font-size:64px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;margin-top:4px;background:linear-gradient(180deg,#fff,#ffcf5a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.celt{font-size:27px;font-weight:800;margin:8px 0 8px}
+.cel.t3 .celt,.cel.t4 .celt{background:linear-gradient(90deg,#ffd76a,#fff6cf,#ffb340,#ffd76a);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.5s linear infinite}
+.celm{color:#cfd5de;font-size:15px}
+.celstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0 4px}
+.celstats div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 6px;opacity:0;animation:rise .5s ease forwards}
+.celstats b{display:block;font-size:19px}
+.celstats span{font-size:11.5px;color:var(--mute)}
+.celfun{font-size:14px;color:#ffd76a;margin-top:12px;opacity:0;animation:rise .6s ease 1.2s forwards}
+.celbtn{margin-top:22px;min-width:160px}
+.celtap{font-size:11.5px;color:var(--mute);margin-top:10px}
+@keyframes pop{0%{transform:scale(0) rotate(-35deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shine{to{background-position:200% center}}
+@keyframes pulse{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.1);opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* logros */
+.achcard{display:flex;align-items:center;gap:12px}
+.achcard .big{font-size:34px}
+.prog{height:6px;background:var(--card2);border-radius:6px;overflow:hidden;margin-top:8px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#ffd76a);border-radius:6px}
+.medals{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.medal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;font-family:inherit;color:var(--text)}
+.medal .e{font-size:34px;line-height:1.2}
+.medal .n{font-size:11.5px;color:var(--mute)}
+.medal .tt{font-size:12.5px;font-weight:600;margin-top:2px;line-height:1.25}
+.medal.lock{opacity:.45;cursor:default}
+.medal.g2{border-color:#2c4a80}
+.medal.g3{border-color:#7a6224}
+.medal.g4{border-color:#d4a83a;box-shadow:0 0 14px rgba(255,200,80,.25)}
 </style>
 </head>
 <body>
@@ -250,8 +295,8 @@ function renderExList(){
 
 function volume(h){return h.exercises.reduce((a,e)=>a+e.sets.reduce((b,s)=>b+(+s.w||0)*(+s.r||0),0),0)}
 function vHistory(){
-  if(!db.history.length)return `<p class="empty">Aún no hay entrenamientos registrados.</p>`;
-  return db.history.map(h=>`<div class="card tap" data-a="hOpen" data-id="${h.id}"><b>${esc(h.name)}</b><div class="mute small">${fmtDate(h.start)}</div>
+  if(!db.history.length)return achCard()+`<p class="empty">Aún no hay entrenamientos registrados.</p>`;
+  return achCard()+db.history.map(h=>`<div class="card tap" data-a="hOpen" data-id="${h.id}"><b>${esc(h.name)}</b><div class="mute small">${fmtDate(h.start)}</div>
    <div class="stat"><span>⏱ <b>${fmtDur(h.end-h.start)}</b></span><span>Series <b>${h.exercises.reduce((a,e)=>a+e.sets.length,0)}</b></span><span>Volumen <b>${fmtW(volume(h))} kg</b></span></div>
    <div class="small" style="margin-top:6px">${h.exercises.map(e=>`${e.sets.length}× ${esc(e.name)}`).join(' · ')}</div></div>`).join('');
 }
@@ -304,7 +349,10 @@ function finishWorkout(){
   if(!confirm(pend?`Hay ${pend} serie${pend>1?'s':''} sin marcar que no se guardará${pend>1?'n':''}. ¿Terminar?`:'¿Terminar entrenamiento?'))return;
   const h={id:uid(),routineId:a.routineId,name:a.name,start:a.start,end:Date.now(),
     exercises:done.map(e=>({exId:e.exId,name:e.name,type:e.type,rest:e.rest,sets:e.sets.map(s=>({w:+s.w||0,r:+s.r||0}))}))};
-  db.history.unshift(h);db.active=null;save();view='history';window.scrollTo(0,0);render();openHistory(h.id);toast('¡Entrenamiento guardado! 💪');
+  db.history.unshift(h);db.active=null;save();
+  const nw=syncAch();
+  view='history';window.scrollTo(0,0);render();openHistory(h.id);
+  if(nw.length)setTimeout(()=>celebrate(nw[nw.length-1]),450);else toast('¡Entrenamiento guardado! 💪');
 }
 
 /* ---------- REST TIMER ---------- */
@@ -496,10 +544,167 @@ document.getElementById('impf').addEventListener('change',async e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
   try{const d=JSON.parse(await f.text());if(!Array.isArray(d.exercises)||!Array.isArray(d.routines))throw 0;
     if(!confirm('Esto reemplazará todos tus datos actuales. ¿Continuar?'))return;
-    db=Object.assign(blank(),d,{active:null});save();closeSheet();view='train';render();toast('Copia importada')}
+    db=Object.assign(blank(),d,{active:null});syncAch();save();closeSheet();view='train';render();toast('Copia importada')}
   catch(err){toast('Archivo no válido')}
 });
 
+/* ---------- LOGROS Y CELEBRACIONES ---------- */
+// tier 1: confeti · 2: confeti + lluvia · 3: fuegos artificiales · 4: espectáculo completo
+const MILESTONES=[
+ {n:1,e:'🌱',t:'¡Primer entreno!',m:'Lo más difícil era empezar, y ya lo has hecho.',tier:1},
+ {n:2,e:'✌️',t:'Doblete',m:'Volver es lo que marca la diferencia. ¡Has vuelto!',tier:1},
+ {n:3,e:'🔥',t:'Se enciende la chispa',m:'Tres entrenos. Esto empieza a oler a hábito.',tier:1},
+ {n:5,e:'🖐️',t:'¡Choca esos cinco!',m:'Cinco sesiones completadas. Vas en serio.',tier:1},
+ {n:7,e:'📅',t:'Siete magníficos',m:'Siete entrenos. Tu cuerpo ya lo está notando.',tier:1},
+ {n:10,e:'💪',t:'Doble dígito',m:'10 entrenos. Ya no eres un principiante cualquiera.',tier:2},
+ {n:15,e:'⚡',t:'Imparable',m:'15 sesiones y subiendo. Nadie te para.',tier:2},
+ {n:20,e:'🚀',t:'Despegue',m:'20 entrenos. La constancia ya es tuya.',tier:2},
+ {n:25,e:'🥉',t:'Medalla de bronce',m:'Un cuarto de centenar. ¡Esto ya es un estilo de vida!',tier:2},
+ {n:30,e:'🗓️',t:'Un mes de hierro',m:'30 entrenos. Lo que hace un mes era esfuerzo, hoy es rutina.',tier:2},
+ {n:40,e:'🛡️',t:'Guerrero',m:'40 batallas contra el hierro. Y las 40 ganadas.',tier:3},
+ {n:50,e:'🥈',t:'¡Medio centenar!',m:'50 entrenos. La mitad de la gente lo deja antes. Tú no.',tier:3},
+ {n:75,e:'🌟',t:'Estrella',m:'75 sesiones. Brillas con luz propia.',tier:3},
+ {n:100,e:'🏆',t:'¡CENTURIÓN!',m:'100 ENTRENOS. Tres cifras. Esto es de otra liga.',tier:4},
+ {n:150,e:'🦾',t:'Cyborg',m:'150 entrenos. Ya eres mitad persona, mitad máquina.',tier:4},
+ {n:200,e:'🐉',t:'La Bestia',m:'200 sesiones. Has despertado al dragón.',tier:4},
+ {n:250,e:'👑',t:'Realeza del hierro',m:'250 entrenos. Larga vida al rey del gym.',tier:4},
+ {n:300,e:'⚔️',t:'¡ESPARTANO!',m:'300 entrenos. This is... ¡EL GYM!',tier:4},
+ {n:365,e:'🌍',t:'Una vuelta al sol',m:'365 entrenos. Un año entero de sesiones. Brutal.',tier:4},
+ {n:500,e:'🌋',t:'LEYENDA',m:'500 entrenos. Se contarán historias sobre ti.',tier:4},
+ {n:750,e:'🪐',t:'Fuera de órbita',m:'750 sesiones. Ya no juegas en este planeta.',tier:4},
+ {n:1000,e:'♾️',t:'INMORTAL',m:'1000 ENTRENOS. No hay palabras. Solo respeto.',tier:4}
+];
+const FUN=[['un piano','🎹',400],['un coche','🚗',1500],['un elefante','🐘',6000],['un autobús','🚌',12000],['una ballena azul','🐋',150000],['un Boeing 747','✈️',400000],['la Torre Eiffel','🗼',7300000]];
+
+function syncAch(){
+  if(!db.ach)db.ach={};
+  const c=db.history.length,nw=[];
+  const starts=db.history.map(h=>h.start).sort((a,b)=>a-b);
+  MILESTONES.forEach(m=>{if(m.n<=c&&!db.ach[m.n]){db.ach[m.n]=starts[m.n-1]||Date.now();nw.push(m)}});
+  if(nw.length)save();
+  return nw;
+}
+function totals(){
+  let vol=0,sets=0,ms=0;
+  db.history.forEach(h=>{ms+=Math.max(0,h.end-h.start);h.exercises.forEach(e=>e.sets.forEach(s=>{sets++;vol+=(+s.w||0)*(+s.r||0)}))});
+  return {vol,sets,hours:ms/3600000,n:db.history.length};
+}
+function funLine(vol){
+  let pick=null;for(const f of FUN)if(vol>=f[2])pick=f;
+  if(!pick)return '';
+  const x=vol/pick[2];
+  return `${pick[1]} En total has movido el peso de ${x<10?x.toLocaleString('es-ES',{maximumFractionDigits:1}):Math.floor(x).toLocaleString('es-ES')} ${x>=1.05?'veces ':''}${pick[0]}`;
+}
+
+/* motor de partículas */
+const FX={c:null,x:null,p:[],raf:0,last:0,show:null,
+  init(){if(this.c)return;const c=document.createElement('canvas');c.id='fx';document.body.appendChild(c);this.c=c;this.x=c.getContext('2d');this.resize();addEventListener('resize',()=>this.resize())},
+  resize(){const d=Math.min(2,devicePixelRatio||1);this.c.width=innerWidth*d;this.c.height=innerHeight*d;this.x.setTransform(d,0,0,d,0,0)},
+  start(){this.init();if(!this.raf){this.last=performance.now();this.raf=requestAnimationFrame(t=>this.loop(t))}},
+  loop(t){
+    const k=Math.min(3,(t-this.last)/16.67);this.last=t;
+    const x=this.x,W=innerWidth,H=innerHeight;x.clearRect(0,0,W,H);
+    const keep=[];
+    for(const p of this.p){
+      p.life-=p.decay*k;if(p.life<=0||p.y>H+40)continue;
+      if(p.k==='conf'){p.vy+=.16*k;p.vx*=Math.pow(.99,k);p.vy=Math.min(p.vy,4.5);p.x+=(p.vx+Math.sin(p.ph+=.08*k)*.8)*k;p.y+=p.vy*k;p.r+=p.vr*k;
+        x.save();x.globalAlpha=Math.min(1,p.life*2);x.translate(p.x,p.y);x.rotate(p.r);x.scale(1,Math.cos(p.ph*1.3));x.fillStyle=p.c;x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.restore();}
+      else if(p.k==='rock'){p.vy+=.06*k;p.x+=p.vx*k;p.y+=p.vy*k;
+        if(Math.random()<.7)keep.push({k:'spark',x:p.x,y:p.y,vx:(Math.random()-.5)*.6,vy:Math.random()*.8,c:'#ffd9a0',life:.5,decay:.03,s:1.4,g:.02});
+        if(p.vy>-1.2){this.boom(p.x,p.y,p.c,p.big);continue}
+        x.globalCompositeOperation='lighter';x.fillStyle='#fff3d6';x.beginPath();x.arc(p.x,p.y,2.2,0,7);x.fill();x.globalCompositeOperation='source-over';}
+      else{p.vx*=Math.pow(.975,k);p.vy=p.vy*Math.pow(.975,k)+(p.g??.05)*k;p.x+=p.vx*k;p.y+=p.vy*k;
+        x.globalCompositeOperation='lighter';x.globalAlpha=Math.max(0,Math.min(1,p.life));x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,p.s*(p.tw?(.6+Math.random()*.6):1),0,7);x.fill();x.globalAlpha=1;x.globalCompositeOperation='source-over';}
+      keep.push(p);
+    }
+    this.p=keep;
+    if(this.p.length||this.show)this.raf=requestAnimationFrame(tt=>this.loop(tt));else{this.raf=0;x.clearRect(0,0,W,H)}
+  },
+  COLORS:['#4f8cff','#ffd76a','#2fbf71','#ff5d8f','#c9a2ff','#ff9f43','#ffffff'],
+  confetti(x,y,n,ang,spread,pow){this.start();for(let i=0;i<n;i++){const a=ang+(Math.random()-.5)*spread,v=pow*(.5+Math.random()*.7);this.p.push({k:'conf',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:Math.random()*6,vr:(Math.random()-.5)*.3,ph:Math.random()*6,w:6+Math.random()*6,h:4+Math.random()*5,c:this.COLORS[i%this.COLORS.length],life:1.6+Math.random(),decay:.006})}},
+  rain(n){this.start();for(let i=0;i<n;i++)this.p.push({k:'conf',x:Math.random()*innerWidth,y:-20-Math.random()*innerHeight*.8,vx:(Math.random()-.5)*1.5,vy:1+Math.random()*2,r:Math.random()*6,vr:(Math.random()-.5)*.25,ph:Math.random()*6,w:6+Math.random()*6,h:4+Math.random()*5,c:this.COLORS[i%this.COLORS.length],life:3,decay:.004})},
+  rocket(big){this.start();const W=innerWidth,H=innerHeight;const c=['#ffd76a','#4f8cff','#ff5d8f','#2fbf71','#c9a2ff','#ff9f43','#7ff0ff'][Math.random()*7|0];
+    const ty=H*(.15+Math.random()*.35);this.p.push({k:'rock',x:W*(.15+Math.random()*.7),y:H+10,vx:(Math.random()-.5)*1.5,vy:-Math.sqrt(2*.06*(H-ty)),c,big,life:9,decay:0})},
+  boom(x,y,c,big){
+    const n=big?140:80,sp=big?6.5:4.5,ring=Math.random()<.35;
+    for(let i=0;i<n;i++){const a=Math.PI*2*i/n+Math.random()*.1,v=ring?sp:sp*(.25+Math.random()*.75);this.p.push({k:'spark',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,c:Math.random()<.2?'#ffffff':c,life:1+Math.random()*.4,decay:.012+Math.random()*.006,s:big?2.3:1.8,g:.045,tw:Math.random()<.4})}
+    this.p.push({k:'spark',x,y,vx:0,vy:0,c:'#ffffff',life:.35,decay:.05,s:big?60:40,g:0});
+    SND.boom(big);
+  },
+  startShow(rate,big){this.stopShow();this.start();this.show=setInterval(()=>{this.rocket(big&&Math.random()<.5);if(Math.random()<.35)setTimeout(()=>this.rocket(big),180)},rate)},
+  stopShow(){clearInterval(this.show);this.show=null}
+};
+
+/* sonido */
+const SND={
+  note(f,t,d,type='triangle',vol=.18){if(!actx)return;const o=actx.createOscillator(),g=actx.createGain(),T=actx.currentTime+t;o.type=type;o.frequency.value=f;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0,T);g.gain.linearRampToValueAtTime(vol,T+.02);g.gain.exponentialRampToValueAtTime(.001,T+d);o.start(T);o.stop(T+d+.05)},
+  fanfare(tier){try{unlockAudio();if(!actx)return;
+    const N={C4:261.6,E4:329.6,G4:392,C5:523.3,D5:587.3,E5:659.3,F5:698.5,G5:784,A5:880,B5:987.8,C6:1046.5,E6:1318.5,G6:1568};
+    const S={1:[['C5',0,.2],['E5',.1,.2],['G5',.2,.4]],
+      2:[['C5',0,.18],['E5',.12,.18],['G5',.24,.18],['C6',.36,.6]],
+      3:[['G4',0,.15],['C5',.15,.15],['E5',.3,.15],['G5',.45,.35],['E5',.8,.15],['G5',.95,.9],['C6',.95,.9],['E6',.95,.9]],
+      4:[['C5',0,.14],['C5',.14,.14],['C5',.28,.14],['C5',.42,.5],['A5',.95,.45],['B5',1.4,.45],['C6',1.85,.25],['B5',2.1,.12],['C6',2.25,1.4],['E6',2.25,1.4],['G6',2.25,1.4],['C4',2.25,1.4]]}[tier];
+    S.forEach(([n,t,d])=>this.note(N[n],t,d,tier>=3?'sawtooth':'triangle',tier>=3?.07:.16));
+    if(tier>=3)S.forEach(([n,t,d])=>this.note(N[n]/2,t,d,'triangle',.08));
+  }catch(e){}},
+  boom(big){try{if(!actx)return;const len=actx.sampleRate*.5,b=actx.createBuffer(1,len,actx.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+    const s=actx.createBufferSource(),f=actx.createBiquadFilter(),g=actx.createGain();f.type='lowpass';f.frequency.value=big?500:900;g.gain.value=big?.35:.2;s.buffer=b;s.connect(f);f.connect(g);g.connect(actx.destination);s.start()}catch(e){}}
+};
+
+let celEl=null;
+function celebrate(m,replay){
+  closeCel();
+  const T=totals(),tier=m.tier;
+  const stats=tier>=2?`<div class="celstats">
+    <div style="animation-delay:.5s"><b>${T.n}</b><span>entrenos</span></div>
+    <div style="animation-delay:.65s"><b>${T.sets.toLocaleString('es-ES')}</b><span>series</span></div>
+    ${tier>=3?`<div style="animation-delay:.8s"><b>${fmtW(Math.round(T.vol))} kg</b><span>levantados</span></div>
+    <div style="animation-delay:.95s"><b>${T.hours.toLocaleString('es-ES',{maximumFractionDigits:1})} h</b><span>entrenando</span></div>`:''}</div>`:'';
+  const fun=tier>=3?funLine(T.vol):'';
+  const el=document.createElement('div');el.className='cel t'+tier;
+  el.innerHTML=`${tier>=3?'<div class="rays"></div>':''}${tier>=4?'<div class="glow"></div>':''}
+   <div class="celbox"><div class="celemoji">${m.e}</div>
+   ${tier>=3?`<div class="celn">Entreno número</div><div class="celbig" data-count="${m.n}">0</div>`:`<div class="celn">Entreno nº ${m.n}</div>`}
+   <div class="celt">${esc(m.t)}</div><div class="celm">${esc(m.m)}</div>${stats}${fun?`<div class="celfun">${fun}</div>`:''}
+   <button class="btn pri celbtn" data-a="celClose">${tier>=4?'¡A POR MÁS! 🔥':'¡Vamos! 💪'}</button>
+   ${replay?'':`<div class="celtap">Lo tienes guardado en Historial → Logros</div>`}</div>`;
+  document.body.appendChild(el);celEl=el;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
+  const cnt=el.querySelector('[data-count]');
+  if(cnt){const t0=performance.now(),dur=tier>=4?1800:1200;const step=t=>{if(!cnt.isConnected)return;const p=Math.min(1,(t-t0)/dur),v=Math.round(m.n*(1-Math.pow(1-p,3)));cnt.textContent=v;if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
+  SND.fanfare(tier);
+  try{navigator.vibrate&&navigator.vibrate({1:[80],2:[100,60,100],3:[150,80,150,80,400],4:[100,50,100,50,100,50,600,100,600]}[tier])}catch(e){}
+  const W=innerWidth,H=innerHeight;
+  if(tier===1){FX.confetti(W/2,H*.6,90,-Math.PI/2,1.4,13)}
+  if(tier===2){FX.confetti(0,H,110,-Math.PI/3,.7,17);FX.confetti(W,H,110,-Math.PI*2/3,.7,17);setTimeout(()=>FX.rain(140),500)}
+  if(tier===3){FX.confetti(W/2,H*.55,120,-Math.PI/2,1.8,15);FX.startShow(650,false);setTimeout(()=>FX.stopShow(),5500)}
+  if(tier===4){FX.confetti(0,H,140,-Math.PI/3,.7,19);FX.confetti(W,H,140,-Math.PI*2/3,.7,19);for(let i=0;i<4;i++)setTimeout(()=>FX.rocket(true),i*220);
+    setTimeout(()=>FX.rain(200),900);FX.startShow(480,true);}
+}
+function closeCel(){FX.stopShow();if(!celEl)return;const el=celEl;celEl=null;el.classList.remove('show');el.style.pointerEvents='none';setTimeout(()=>el.remove(),400)}
+
+function achCard(){
+  const c=db.history.length,got=MILESTONES.filter(m=>db.ach&&db.ach[m.n]).length;
+  const next=MILESTONES.find(m=>m.n>c),prev=[...MILESTONES].reverse().find(m=>m.n<=c);
+  const base=prev?prev.n:0,pct=next?Math.round(100*(c-base)/(next.n-base)):100;
+  return `<div class="card tap" data-a="achOpen"><div class="achcard"><span class="big">${prev?prev.e:'🎁'}</span><div class="grow"><b>Logros · ${got}/${MILESTONES.length}</b>
+   <div class="mute small">${next?`Próxima sorpresa en el entreno ${next.n} · ${next.n-c===1?'¡en el siguiente!':`faltan ${next.n-c}`}`:'¡Los tienes todos! Eres inmortal.'}</div>
+   <div class="prog"><i style="width:${pct}%"></i></div></div></div></div>`;
+}
+function openAch(){
+  openSheet(()=>`<div class="shead"><button data-a="close">Cerrar</button><b>Logros</b><button></button></div>
+   <p class="mute small">Cada logro trae su sorpresa, y cuanto más lejos, más espectacular. Toca uno conseguido para volver a verlo.</p>
+   <div class="medals">${MILESTONES.map(m=>{const ok=db.ach&&db.ach[m.n];return ok
+     ?`<button class="medal g${m.tier}" data-a="achPlay" data-n="${m.n}"><div class="e">${m.e}</div><div class="tt">${esc(m.t)}</div><div class="n">Entreno ${m.n}</div><div class="n">${new Date(ok).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'2-digit'})}</div></button>`
+     :`<div class="medal lock"><div class="e">🎁</div><div class="tt">¿?</div><div class="n">Entreno ${m.n}</div></div>`}).join('')}</div>`);
+}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const a=el.dataset.a;
+  if(a==='celClose')closeCel();
+  else if(a==='achOpen')openAch();
+  else if(a==='achPlay'){const m=MILESTONES.find(x=>x.n===+el.dataset.n);if(m)celebrate(m,true)}
+});
+
+syncAch();
 if(db.active)view='workout';
 render();
 if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
