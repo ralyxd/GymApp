@@ -166,6 +166,41 @@ label input,label select{margin-top:5px}
 .medal.g2{border-color:#2c4a80}
 .medal.g3{border-color:#7a6224}
 .medal.g4{border-color:#d4a83a;box-shadow:0 0 14px rgba(255,200,80,.25)}
+/* ===== JUEGO (temporal) — borrar este bloque cuando acabe el juego ===== */
+.secretin{display:block;margin:80px auto 0;width:60%;background:transparent;border:0;border-bottom:1px solid #1a1d23;border-radius:0;color:#3d434e;text-align:center;font-size:16px;padding:6px}
+.secretin:focus{border-bottom-color:#2a2f39;outline:none}
+.card.secret{border-color:#4a2234;border-left-color:#9b4a6b;background:linear-gradient(135deg,rgba(90,25,55,.35),var(--card) 70%);box-shadow:0 0 22px rgba(222,91,91,.12)}
+.card.secret b{animation:sflick 7s infinite}
+.mysbtn{background:#2a1520;margin-right:2px;color:var(--text)}
+.vidcard{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);border-color:#4a2234;background:linear-gradient(135deg,rgba(90,25,55,.45),var(--card) 75%);box-shadow:0 0 22px rgba(222,91,91,.12)}
+.vidcard .vplay{width:44px;height:44px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:var(--acc);color:#fff;font-size:17px;padding-left:3px;box-shadow:0 0 18px rgba(222,91,91,.55);animation:vpulse 2s ease-in-out infinite}
+@keyframes vpulse{0%,100%{box-shadow:0 0 10px rgba(222,91,91,.4)}50%{box-shadow:0 0 26px rgba(222,91,91,.85)}}
+@keyframes sflick{0%,93%,100%{opacity:1;text-shadow:none}94%{opacity:.4;text-shadow:2px 0 #ff2a6d,-2px 0 #4fd8ff}96%{opacity:1}97%{opacity:.6}}
+.mys{position:fixed;inset:0;z-index:60;background:#000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity 1.4s;overflow:hidden}
+.mys.show{opacity:1}
+.mys .fog{position:absolute;inset:-25%;background:radial-gradient(ellipse at 30% 62%,rgba(130,25,55,.45),transparent 50%),radial-gradient(ellipse at 72% 38%,rgba(80,35,150,.35),transparent 55%);filter:blur(30px);animation:fog 11s ease-in-out infinite alternate;pointer-events:none}
+.mys .vig{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,transparent 25%,#000 78%);pointer-events:none}
+.mys .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);pointer-events:none}
+.mbox{position:relative;text-align:center;max-width:360px;width:100%}
+.eye{width:210px;height:116px;display:block;margin:0 auto;filter:drop-shadow(0 0 26px rgba(222,91,91,.55))}
+.eye .lid{transform-origin:100px 58px;animation:eyeopen 2.4s cubic-bezier(.7,0,.2,1) .5s both,blink 7s 5s infinite}
+.eye .iris{animation:look 6s ease-in-out 3s infinite}
+.mglitch{font:700 13px ui-monospace,Menlo,monospace;letter-spacing:.32em;color:#b98a9a;margin-top:22px;min-height:18px}
+.mtitle{font-size:23px;font-weight:800;margin:10px 0 0;color:#f3dade;text-shadow:0 0 18px rgba(222,91,91,.55);opacity:0;transition:opacity 1.6s;animation:glitch 3.5s infinite}
+.mclue{margin-top:24px;padding:18px 16px;border:1px solid rgba(222,91,91,.35);border-radius:14px;background:rgba(22,8,15,.65);font:italic 20px/1.5 Georgia,'Times New Roman',serif;color:#f6e7ea;min-height:120px;box-shadow:inset 0 0 30px rgba(222,91,91,.15),0 0 40px rgba(155,74,107,.2);opacity:0;transition:opacity 1.2s;text-align:left}
+.mclue .cur{display:inline-block;width:2px;height:1em;background:#de5b5b;vertical-align:-3px;margin-left:2px;animation:cur 1s steps(1) infinite}
+.mfoot{font-size:11.5px;letter-spacing:.12em;color:#6b5560;margin-top:14px;opacity:0;transition:opacity 1.5s}
+.mbtn{margin-top:22px;opacity:0;transition:opacity 1.5s;background:transparent;border:1px solid rgba(243,218,222,.25);color:#e9c9cf;border-radius:999px;padding:10px 22px;font:600 14px inherit;font-family:inherit;letter-spacing:.06em;cursor:pointer}
+.mshow{opacity:1!important}
+body.glitching main,body.glitching header,body.glitching nav{animation:bglitch .55s steps(2) 2}
+@keyframes eyeopen{from{transform:scaleY(.03)}to{transform:scaleY(1)}}
+@keyframes blink{0%,95%,100%{transform:scaleY(1)}97.5%{transform:scaleY(.05)}}
+@keyframes look{0%,100%{transform:translateX(0)}25%{transform:translateX(-16px)}45%{transform:translateX(-16px)}70%{transform:translateX(14px)}85%{transform:translateX(0)}}
+@keyframes glitch{0%,88%,100%{transform:none;text-shadow:0 0 18px rgba(222,91,91,.55)}89%{transform:translateX(-3px) skewX(10deg);text-shadow:3px 0 #ff2a6d,-3px 0 #4fd8ff}91%{transform:translateX(3px);text-shadow:-3px 0 #ff2a6d,3px 0 #4fd8ff}93%{transform:none}}
+@keyframes fog{to{transform:translate(6%,-5%) scale(1.12)}}
+@keyframes cur{50%{opacity:0}}
+@keyframes bglitch{0%{filter:none;transform:none}25%{filter:hue-rotate(110deg) contrast(1.6);transform:translateX(-5px)}50%{filter:invert(1);transform:translateX(4px)}75%{filter:hue-rotate(-90deg) saturate(3);transform:skewX(4deg)}100%{filter:none;transform:none}}
+/* ===== fin JUEGO ===== */
 </style>
 </head>
 <body>
@@ -260,7 +295,7 @@ function dmini(days){return `<span class="dmini">${DAYS.map((d,i)=>`<span class=
 function vTrain(){
   const t=todayIdx();
   const todays=db.routines.filter(r=>r.days.includes(t)),others=db.routines.filter(r=>!r.days.includes(t));
-  const card=r=>{const ld=lastDone(r.id);return `<div class="card rt"><div class="row"><div class="grow"><b>${esc(r.name)}</b><div style="margin-top:4px">${dmini(r.days)}</div></div><button class="btn pri" data-a="start" data-id="${r.id}">Empezar</button></div>
+  const card=r=>{const ld=lastDone(r.id);return `<div class="card rt${r.secret?' secret':''}"><div class="row"><div class="grow"><b>${esc(r.name)}</b><div style="margin-top:4px">${dmini(r.days)}</div></div>${r.secret?`<a class="btn sm mysbtn" href="${SECRET_VIDEO}" target="_blank" rel="noopener" aria-label="Vídeo" style="text-decoration:none">▶</a>`:''}${r.secret&&db.secretDone?'<button class="btn sm mysbtn" data-a="mystery" aria-label="Ver mensaje">👁</button>':''}<button class="btn pri" data-a="start" data-id="${r.id}">Empezar</button></div>
     <div class="mute small" style="margin-top:8px">${r.items.map(it=>esc(getEx(it.exId)?.name||'?')).join(' · ')||'Sin ejercicios'}</div>
     ${ld?`<div class="mute small" style="margin-top:4px">Último: ${fmtDate(ld)}</div>`:''}</div>`};
   let h='';
@@ -338,7 +373,7 @@ function renderWorkout(){
     <button class="btn ghost full sm" data-a="addSet" data-i="${i}">+ Añadir serie</button></div>`}).join('');
   if(!a.exercises.length)h+=`<p class="empty">Añade ejercicios para empezar.</p>`;
   h+=`<button class="btn ghost full" data-a="wAddEx">+ Añadir ejercicio</button><button class="btn danger full" style="margin-top:24px" data-a="cancelWk">Cancelar entrenamiento</button>`;
-  document.getElementById('main').innerHTML=h;
+  document.getElementById('main').innerHTML=(isSecretWorkout(a)?secretVideoCard():'')+h;
   window.scrollTo(0,y);tick();
 }
 function toggleSet(i,j){
@@ -354,6 +389,7 @@ function toggleSet(i,j){
 }
 function finishWorkout(){
   const a=db.active;
+  if(isSecretWorkout(a)){finishSecret();return}
   const done=a.exercises.map(e=>({...e,sets:e.sets.filter(s=>s.done)})).filter(e=>e.sets.length);
   if(!done.length){if(confirm('No has completado ninguna serie. ¿Descartar el entrenamiento?')){db.active=null;save();view='train';render()}return}
   const pend=a.exercises.reduce((n,e)=>n+e.sets.filter(s=>!s.done).length,0);
@@ -487,7 +523,8 @@ function openSettings(){
   <div class="card small" style="margin-top:6px">${db.exercises.length} ejercicios · ${db.routines.length} rutinas · ${db.history.length} entrenamientos${db.lastBackup?`<div class="mute">Última copia: ${fmtDate(db.lastBackup)}</div>`:'<div class="mute">Aún no has hecho ninguna copia</div>'}</div>
   <button class="bigbtn" data-a="export"><span class="ico t0">⬇︎</span><span class="grow"><b>Descargar todos los datos</b><div class="mute small">Ejercicios, rutinas e historial en un archivo .json</div></span></button>
   <button class="bigbtn" data-a="import"><span class="ico t1">⬆︎</span><span class="grow"><b>Importar datos</b><div class="mute small">Restaura un archivo .json descargado antes (reemplaza lo actual)</div></span></button>
-  <button class="bigbtn red" data-a="wipe" style="margin-top:28px"><span class="ico" style="background:#3a1d21">🗑</span><span class="grow"><b>Borrar todos los datos</b></span></button>`);
+  <button class="bigbtn red" data-a="wipe" style="margin-top:28px"><span class="ico" style="background:#3a1d21">🗑</span><span class="grow"><b>Borrar todos los datos</b></span></button>
+  <input id="secretw" class="secretin" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="·">`);
 }
 
 /* ---------- EVENTS ---------- */
@@ -551,6 +588,7 @@ document.addEventListener('input',e=>{
   else if(d.rf&&draftR){if(d.i!==undefined)draftR.items[+d.i][d.rf]=el.value;else draftR[d.rf]=el.value}
   else if(el.id==='exq'){exFilter.q=el.value;renderExList()}
   else if(el.id==='pq'){pk.q=el.value;renderPickList()}
+  else if(el.id==='secretw'){if(norm(el.value).trim()===SECRET_WORD){el.value='';el.blur();unlockSecret()}}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='newtag'){e.preventDefault();document.querySelector('[data-a="addTag"]')?.click()}});
 document.getElementById('impf').addEventListener('change',async e=>{
@@ -713,9 +751,94 @@ function openAch(){
 }
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const a=el.dataset.a;
   if(a==='celClose')closeCel();
+  else if(a==='mysClose')closeMys();
+  else if(a==='mystery')mystery();
   else if(a==='achOpen')openAch();
   else if(a==='achPlay'){const m=MILESTONES.find(x=>x.n===+el.dataset.n);if(m)celebrate(m,true)}
 });
+
+/* ===== JUEGO (temporal) — borrar este bloque cuando acabe el juego =====
+   También: la línea de 'secretw' en el listener de input, isSecretWorkout en finishWorkout,
+   'mysClose'/'mystery' en el listener de logros, el input #secretw en Opciones y la clase .secret en las tarjetas. */
+const SECRET_WORD='mazada';
+const SECRET_NAME='My mooscles are getting stronger';
+const SECRET_CLUE='Cal con un lado sin final: grito de bibliotecaria (¡6!)';
+const SECRET_VIDEO='https://www.instagram.com/reel/DZw7rXvMJ8D/?psln=OGp6NTJqb2k2aXR3';
+function secretVideoCard(){return `<a class="card vidcard" href="${SECRET_VIDEO}" target="_blank" rel="noopener"><span class="vplay">▶</span><span class="grow"><b>Calentamiento obligatorio</b><span class="mute small" style="display:block">Míralo antes de empezar…</span></span><span class="mute">↗</span></a>`}
+function isSecretWorkout(a){return !!(a&&a.routineId&&db.routines.some(r=>r.id===a.routineId&&r.secret))}
+function unlockSecret(){
+  if(db.routines.some(r=>r.secret)){while(stack.length)closeSheet();view='train';render();toast('👁 Ya está despierto…');return}
+  const mk=(name,type,tags)=>{let ex=db.exercises.find(x=>x.name===name);if(!ex){ex={id:uid(),name,type,tags,secret:true};db.exercises.push(ex)}return ex};
+  const defs=[['Pataleta','Peso libre',['Cuádriceps','Gemelo'],3,10],['El leñador','Polea',['Abdomen','Hombro'],2,6],['Golpeo de codos unilateral','Peso libre',['Tríceps'],2,10],['Golpeo de puño','Peso libre',['Antebrazo'],2,6]];
+  db.routines.unshift({id:'secret-'+uid(),secret:true,name:SECRET_NAME,days:[],items:defs.map(([n,t,tg,s,r])=>({exId:mk(n,t,tg).id,sets:s,reps:String(r),rest:60}))});
+  save();while(stack.length)closeSheet();view='train';window.scrollTo(0,0);render();
+  glitchScreen();unlockAudio();MSND.thump(0);MSND.thump(.35);
+  try{navigator.vibrate&&navigator.vibrate([60,80,200])}catch(e){}
+  setTimeout(()=>toast('👁 Algo ha despertado…'),600);
+}
+function finishSecret(){
+  const a=db.active,pend=a.exercises.reduce((n,e)=>n+e.sets.filter(s=>!s.done).length,0);
+  if(!a.exercises.length||pend){glitchScreen();toast('👁 Aún no… Completa todas las series');return}
+  if(!confirm('¿Terminar entrenamiento?'))return;
+  db.active=null;db.secretDone=Date.now();save(); // no se guarda en el historial ni cuenta para logros
+  view='train';window.scrollTo(0,0);render();setTimeout(mystery,350);
+}
+function glitchScreen(){document.body.classList.remove('glitching');void document.body.offsetWidth;document.body.classList.add('glitching');setTimeout(()=>document.body.classList.remove('glitching'),1150)}
+
+const MSND={nodes:[],
+  start(){try{unlockAudio();if(!actx)return;const t=actx.currentTime,out=actx.createGain(),f=actx.createBiquadFilter();
+    out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(.09,t+3);f.type='lowpass';f.frequency.setValueAtTime(140,t);f.frequency.linearRampToValueAtTime(520,t+8);f.Q.value=6;
+    f.connect(out);out.connect(actx.destination);
+    [[55,'sawtooth'],[55.6,'sawtooth'],[82.4,'triangle'],[110.3,'sine']].forEach(([fr,ty])=>{const o=actx.createOscillator();o.type=ty;o.frequency.value=fr;o.connect(f);o.start();this.nodes.push(o)});
+    const lfo=actx.createOscillator(),lg=actx.createGain();lfo.frequency.value=.15;lg.gain.value=180;lfo.connect(lg);lg.connect(f.frequency);lfo.start();this.nodes.push(lfo);
+    this.out=out;}catch(e){}},
+  stop(){try{if(this.out&&actx){const t=actx.currentTime;this.out.gain.cancelScheduledValues(t);this.out.gain.setValueAtTime(this.out.gain.value,t);this.out.gain.linearRampToValueAtTime(0,t+1.2);const ns=this.nodes;setTimeout(()=>ns.forEach(n=>{try{n.stop()}catch(e){}}),1400)}}catch(e){}this.nodes=[];this.out=null},
+  thump(dt){try{if(!actx)return;const t=actx.currentTime+dt,o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.setValueAtTime(70,t);o.frequency.exponentialRampToValueAtTime(38,t+.25);g.gain.setValueAtTime(.5,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+.4)}catch(e){}},
+  tick(){try{if(!actx)return;const t=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type='square';o.frequency.value=1800+Math.random()*600;g.gain.setValueAtTime(.015,t);g.gain.exponentialRampToValueAtTime(.0001,t+.03);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+.04)}catch(e){}},
+  reveal(){try{if(!actx)return;[392,466.2,587.3,698.5].forEach((f,i)=>SND.note(f,i*.18,2.2,'sine',.05));const len=actx.sampleRate*1.5,b=actx.createBuffer(1,len,actx.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(i/len,2)*(1-i/len)*3;const s=actx.createBufferSource(),f=actx.createBiquadFilter(),g=actx.createGain();f.type='bandpass';f.frequency.value=2500;g.gain.value=.12;s.buffer=b;s.connect(f);f.connect(g);g.connect(actx.destination);s.start()}catch(e){}}
+};
+
+const EYE=`<svg class="eye" viewBox="0 0 200 116"><defs><clipPath id="eyec"><path d="M8 58 Q100 -16 192 58 Q100 132 8 58Z"/></clipPath>
+<radialGradient id="eyei"><stop offset="0" stop-color="#ffd0d0"/><stop offset=".35" stop-color="#ef6a6a"/><stop offset=".75" stop-color="#8a1f33"/><stop offset="1" stop-color="#2a0710"/></radialGradient></defs>
+<g class="lid"><path d="M8 58 Q100 -16 192 58 Q100 132 8 58Z" fill="#0d0609" stroke="#de5b5b" stroke-width="2.2"/>
+<g clip-path="url(#eyec)"><g class="iris"><circle cx="100" cy="58" r="34" fill="url(#eyei)"/><ellipse cx="100" cy="58" rx="6" ry="26" fill="#040102"/><circle cx="110" cy="46" r="5" fill="#fff" opacity=".7"/></g></g></g></svg>`;
+
+let mysEl=null,mysT=[],mysI=null;
+function mystery(){
+  closeMys(true);unlockAudio();
+  const el=document.createElement('div');el.className='mys';
+  el.innerHTML=`<div class="fog"></div><div class="scan"></div><div class="vig"></div>
+   <div class="mbox">${EYE}<div class="mglitch" id="mg"></div><div class="mtitle" id="mt">Tus músculos guardan un secreto…</div>
+   <div class="mclue" id="mc"></div><div class="mfoot" id="mf">ESTE ENTRENO NO HA QUEDADO REGISTRADO</div>
+   <button class="mbtn" data-a="mysClose" id="mb">Cerrar los ojos</button></div>`;
+  document.body.appendChild(el);mysEl=el;
+  const $=id=>el.querySelector('#'+id),T=(f,ms)=>mysT.push(setTimeout(f,ms));
+  glitchScreen();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
+  MSND.start();
+  try{navigator.vibrate&&navigator.vibrate([400,250,400,900,400,250,400])}catch(e){}
+  [0,1.2,2.4,3.6].forEach(t=>{MSND.thump(t);MSND.thump(t+.3)});
+  FX.start();mysI=setInterval(()=>{const c=['#de5b5b','#9b4a6b','#7b5bd6','#f4a5a5'][Math.random()*4|0];
+    FX.p.push({k:'spark',x:Math.random()*innerWidth,y:innerHeight+5,vx:(Math.random()-.5)*.4,vy:-.5-Math.random()*.8,c,life:1,decay:.003+Math.random()*.003,s:1+Math.random()*1.8,g:-.018,tw:true});if(!FX.raf)FX.start()},90);
+  T(()=>scramble($('mg'),'ENTRENO Nº ???'),2300);
+  T(()=>$('mt').classList.add('mshow'),3600);
+  T(()=>{$('mc').classList.add('mshow');typeClue($('mc'),SECRET_CLUE,()=>{MSND.reveal();$('mf').classList.add('mshow');T(()=>$('mb').classList.add('mshow'),900)})},5400);
+}
+function scramble(node,text){
+  const ch='█▓▒░#%&@?¿¡!<>/\\ΣΔΨ';let f=0;const total=26;
+  const step=()=>{if(!node.isConnected)return;f++;node.textContent=[...text].map((c,i)=>c===' '?' ':(f>total*(i/text.length)+8?c:ch[Math.random()*ch.length|0])).join('');if(f<total+10)mysT.push(setTimeout(step,50));else glitchLoop(node,text)};step();
+}
+function glitchLoop(node,text){ // de vez en cuando las ??? se corrompen
+  const g=()=>{if(!node.isConnected)return;node.textContent=text.replace(/\?/g,()=>'█▓?¿#'[Math.random()*5|0]);mysT.push(setTimeout(()=>{if(node.isConnected)node.textContent=text},140));mysT.push(setTimeout(g,1500+Math.random()*2500))};mysT.push(setTimeout(g,1800));
+}
+function typeClue(node,text,done){
+  let i=0;node.innerHTML='<span></span><i class="cur"></i>';const sp=node.firstChild;
+  const step=()=>{if(!node.isConnected)return;sp.textContent=text.slice(0,++i);if(text[i-1]!==' ')MSND.tick();
+    if(i<text.length){const c=text[i-1];mysT.push(setTimeout(step,/[,:.]/.test(c)?420:c==='('?600:45+Math.random()*55))}else done&&done()};step();
+}
+function closeMys(instant){mysT.forEach(clearTimeout);mysT=[];clearInterval(mysI);mysI=null;MSND.stop();if(!mysEl)return;const el=mysEl;mysEl=null;
+  if(instant){el.remove();return}el.classList.remove('show');el.style.pointerEvents='none';setTimeout(()=>el.remove(),1400)}
+/* ===== fin JUEGO ===== */
 
 syncAch();
 if(db.active)view='workout';
