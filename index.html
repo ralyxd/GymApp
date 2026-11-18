@@ -197,6 +197,7 @@ body.hasbanner .fab{bottom:calc(134px + env(safe-area-inset-bottom))}
 .card.secret b{animation:sflick 7s infinite}
 .chip[data-t="Especial"]{border-color:#4a2234;color:#e6a8bf;background:rgba(90,25,55,.3)}
 .chip.on[data-t="Especial"]{background:#9b4a6b;border-color:#9b4a6b;color:#fff}
+.tag.sp{background:rgba(90,25,55,.45);color:#e6a8bf}
 .mysbtn{background:#2a1520;margin-right:2px;color:var(--text)}
 .vidcard{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);border-color:#4a2234;background:linear-gradient(135deg,rgba(90,25,55,.45),var(--card) 75%);box-shadow:0 0 22px rgba(222,91,91,.12)}
 .vidcard .vplay{width:44px;height:44px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:var(--acc);color:#fff;font-size:17px;padding-left:3px;box-shadow:0 0 18px rgba(222,91,91,.55);animation:vpulse 2s ease-in-out infinite}
@@ -299,6 +300,7 @@ const NAV=[['train','Entrenar'],['exercises','Ejercicios'],['history','Historial
 
 let view='train';
 let exFilter={q:'',tag:null,type:null};
+let rSpecial=false; // filtro de rutinas en Entrenar: false = Todas (sin especiales), true = solo Especial
 
 /* ---------- RENDER ---------- */
 function render(){
@@ -322,15 +324,19 @@ function render(){
 function lastDone(rid){const h=db.history.find(x=>x.routineId===rid);return h?h.start:null}
 
 function vTrain(){
-  const card=r=>{const ld=lastDone(r.id),ns=r.items.reduce((a,b)=>a+(+b.sets||0),0);return `<div class="card tap rt${r.secret?' secret':''}" data-a="rOpen" data-id="${r.id}"><div class="row"><div class="grow"><b>${esc(r.name)}</b></div>${r.secret?`<a class="btn sm mysbtn" href="${SECRET_VIDEO}" target="_blank" rel="noopener" aria-label="Vídeo" style="text-decoration:none">▶</a>`:''}${r.secret&&db.secretDone?'<button class="btn sm mysbtn" data-a="mystery" aria-label="Ver mensaje">👁</button>':''}<button class="btn pri" data-a="start" data-id="${r.id}">Empezar</button></div>
+  const card=r=>{const ld=lastDone(r.id),ns=r.items.reduce((a,b)=>a+(+b.sets||0),0);return `<div class="card tap rt${r.secret?' secret':''}" data-a="rOpen" data-id="${r.id}"><div class="row"><div class="grow"><b>${esc(r.name)}</b>${r.secret?`<div><span class="tag sp">${SPECIAL_TAG}</span></div>`:''}</div>${r.secret?`<a class="btn sm mysbtn" href="${SECRET_VIDEO}" target="_blank" rel="noopener" aria-label="Vídeo" style="text-decoration:none">▶</a>`:''}${r.secret&&db.secretDone?'<button class="btn sm mysbtn" data-a="mystery" aria-label="Ver mensaje">👁</button>':''}<button class="btn pri" data-a="start" data-id="${r.id}">Empezar</button></div>
     <div class="small" style="margin-top:8px">${r.items.map(it=>esc(getEx(it.exId)?.name||'?')).join(' · ')||'<span class="mute">Sin ejercicios</span>'}</div>
     <div class="mute small" style="margin-top:4px">${r.items.length} ejercicio${r.items.length===1?'':'s'} · ${ns} series${ld?` · Último: ${fmtDate(ld)}`:''}</div></div>`};
   let h='';
   if(db.active)h+=`<div class="card hl"><div class="row"><div class="grow"><b>Entrenamiento en curso</b><div class="mute small">${esc(db.active.name)} · <span data-elapsed></span></div></div><button class="btn pri" data-a="resume">Continuar</button></div></div>`;
-  if(!db.routines.length){
+  const specials=db.routines.filter(r=>r.secret),normal=db.routines.filter(r=>!r.secret);
+  if(!specials.length)rSpecial=false;
+  if(specials.length)h+=`<div class="chips" style="margin-top:6px"><button class="chip ${!rSpecial?'on':''}" data-a="rSpec" data-v="0">Todas</button><button class="chip ${rSpecial?'on':''}" data-a="rSpec" data-v="1" data-t="${SPECIAL_TAG}">${SPECIAL_TAG}</button></div>`;
+  const list=rSpecial?specials:normal;
+  if(!list.length){
     h+=`<p class="empty">Aún no tienes rutinas.<br>Pulsa <b class="acc">+</b> para crear la primera.</p>`;
   }else{
-    h+=`<h2>Tus rutinas</h2>`+db.routines.map(card).join('');
+    h+=`<h2>${rSpecial?SPECIAL_TAG:'Tus rutinas'}</h2>`+list.map(card).join('');
     h+=`<p class="mute small" style="text-align:center;margin:4px 0 0">Toca una rutina para editarla</p>`;
   }
   h+=`<button class="btn ghost full" data-a="startEmpty">Empezar entrenamiento vacío</button>`;
@@ -395,7 +401,7 @@ function renderWorkout(){
       <button class="chk" data-a="toggle" data-i="${i}" data-j="${j}">✓</button></div>`}).join('')}
     <button class="btn ghost full sm" data-a="addSet" data-i="${i}">+ Añadir serie</button></div>`}).join('');
   if(!a.exercises.length)h+=`<p class="empty">Añade ejercicios para empezar.</p>`;
-  h+=`<button class="btn ghost full" data-a="wAddEx">+ Añadir ejercicio</button><button class="btn danger full" style="margin-top:24px" data-a="cancelWk">Cancelar entrenamiento</button>`;
+  h+=`${isSecretWorkout(a)?'':'<button class="btn ghost full" data-a="wAddEx">+ Añadir ejercicio</button>'}<button class="btn danger full" style="margin-top:24px" data-a="cancelWk">Cancelar entrenamiento</button>`;
   document.getElementById('main').innerHTML=(isSecretWorkout(a)?secretVideoCard():'')+h;
   document.querySelectorAll('.wnote').forEach(autosize);
   window.scrollTo(0,y);tick();
@@ -506,7 +512,7 @@ function openRoutine(id){
       <div class="grid3"><label>Series<input type="number" inputmode="numeric" data-rf="sets" data-i="${i}" value="${esc(it.sets)}"></label>
       ${ex&&ex.mode==='time'?`<label>Tiempo (s)<input inputmode="numeric" data-rf="reps" data-i="${i}" value="${esc(it.reps)}" placeholder="60"></label>`:`<label>Reps<input data-rf="reps" data-i="${i}" value="${esc(it.reps)}" placeholder="8-12"></label>`}
       <label>Descanso (s)<input type="number" inputmode="numeric" data-rf="rest" data-i="${i}" value="${esc(it.rest)}"></label></div></div>`}).join('')}
-    <button class="btn ghost full" data-a="rAdd">+ Añadir ejercicios</button>
+    ${draftR.secret?`<p class="mute small" style="text-align:center;margin:10px 0 0">🔒 A esta rutina no se le pueden añadir ejercicios</p>`:`<button class="btn ghost full" data-a="rAdd">+ Añadir ejercicios</button>`}
     ${draftR.id?`<button class="btn danger full" style="margin-top:20px" data-a="delR">Eliminar rutina</button>`:''}`);
 }
 function saveR(){
@@ -582,7 +588,7 @@ document.addEventListener('click',e=>{
     case 'wexMenu':{const ex=db.active.exercises[i];openSheet(()=>`<div class="shead"><button data-a="close">Cerrar</button><b>${esc(ex.name)}</b><button></button></div><div class="menu"><button data-a="wexMove" data-i="${i}" data-d="-1">↑ Mover arriba</button><button data-a="wexMove" data-i="${i}" data-d="1">↓ Mover abajo</button><button class="red" data-a="wexRemove" data-i="${i}">Quitar ejercicio</button></div>`);break}
     case 'wexMove':{const L=db.active.exercises,k=i+(+el.dataset.d);if(k>=0&&k<L.length){[L[i],L[k]]=[L[k],L[i]];save()}closeSheet();renderWorkout();break}
     case 'wexRemove':db.active.exercises.splice(i,1);save();closeSheet();renderWorkout();break;
-    case 'wAddEx':openPicker(ids=>{ids.forEach(x=>{const w=mkWEx(x,3,'',90);if(w)db.active.exercises.push(w)});save();renderWorkout()});break;
+    case 'wAddEx':if(isSecretWorkout(db.active))break;openPicker(ids=>{ids.forEach(x=>{const w=mkWEx(x,3,'',90);if(w)db.active.exercises.push(w)});save();renderWorkout()});break;
     case 'restAdj':if(db.active&&db.active.restEnd){db.active.restEnd+=(+el.dataset.d)*1000;db.active.restTotal=Math.max(1,db.active.restTotal+(+el.dataset.d));save();tick()}break;
     case 'restSkip':if(db.active){db.active.restEnd=0;alerted=true;save();tick()}break;
     case 'exNew':openExercise(null);break;
@@ -593,11 +599,12 @@ document.addEventListener('click',e=>{
     case 'delEx':{const did=draftEx.id;const used=db.routines.filter(r=>r.items.some(it=>it.exId===did)).length;ask(used?`Este ejercicio está en ${used} rutina${used>1?'s':''} y se quitará de ellas. ¿Eliminar?`:'¿Eliminar este ejercicio?',{ok:'Eliminar',danger:true}).then(ok=>{if(!ok)return;db.exercises=db.exercises.filter(x=>x.id!==did);db.routines.forEach(r=>r.items=r.items.filter(it=>it.exId!==did));save();closeSheet();render()});break}
     case 'exTagF':exFilter.tag=el.dataset.t||null;render();break;
     case 'exType':exFilter.type=el.dataset.t||null;render();break;
+    case 'rSpec':rSpecial=el.dataset.v==='1';render();break;
     case 'rNew':openRoutine(null);break;
     case 'rOpen':openRoutine(id);break;
     case 'rMove':{const L=draftR.items,k=i+(+el.dataset.d);if(k>=0&&k<L.length){[L[i],L[k]]=[L[k],L[i]];refreshSheet()}break}
     case 'rDel':draftR.items.splice(i,1);refreshSheet();break;
-    case 'rAdd':openPicker(ids=>{ids.forEach(x=>draftR.items.push({exId:x,sets:3,reps:(getEx(x)||{}).mode==='time'?'60':'8-12',rest:90}));refreshSheet()});break;
+    case 'rAdd':if(draftR.secret)break;openPicker(ids=>{ids.forEach(x=>draftR.items.push({exId:x,sets:3,reps:(getEx(x)||{}).mode==='time'?'60':'8-12',rest:90}));refreshSheet()});break;
     case 'saveR':saveR();break;
     case 'delR':{const rid=draftR.id;ask('¿Eliminar esta rutina? El historial se mantiene.',{ok:'Eliminar',danger:true}).then(ok=>{if(ok){db.routines=db.routines.filter(r=>r.id!==rid);save();closeSheet();render()}});break}
     case 'pick':pk.sel.has(id)?pk.sel.delete(id):pk.sel.add(id);renderPickList();break;
